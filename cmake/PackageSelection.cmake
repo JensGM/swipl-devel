@@ -26,10 +26,13 @@ set(SWIPL_PACKAGE_LIST_SSL_title     "OpenSSL_interface")
 set(SWIPL_PACKAGE_LIST_TIPC_title    "TIPC_networking")
 set(SWIPL_PACKAGE_LIST_GUI_title     "XPCE_graphics_subsystem")
 set(SWIPL_PACKAGE_LIST_WASM_title    "WASM_libraries")
+set(SWIPL_PACKAGE_LIST_WASI_title    "WASI_libraries")
 set(SWIPL_PACKAGE_LIST_PYTHON_title  "Python_interface")
 
 if(EMSCRIPTEN)
   set(SWIPL_PACKAGE_SETS WASM)
+elseif(WASI)
+  set(SWIPL_PACKAGE_SETS WASI)
 else()
   set(SWIPL_PACKAGE_SETS
       BASIC ARCHIVE ODBC BDB PCRE YAML JSON JAVA PYTHON SSL TIPC TERM GUI)
@@ -114,6 +117,9 @@ set(SWIPL_PACKAGE_LIST_GUI
 set(SWIPL_PACKAGE_LIST_WASM
     clpqr plunit chr clib http semweb pcre utf8proc)
 
+set(SWIPL_PACKAGE_LIST_WASI
+    plunit clib sgml zlib semweb RDF)
+
 # swipl_package_component(pkg var)
 #
 # Set ${var} to the package group to which ${pkg} belongs
@@ -144,7 +150,7 @@ set(SWIPL_PKG_DEPS_pldoc clib http sgml)
 set(SWIPL_PKG_DEPS_semweb RDF clib http nlp sgml zlib)
 set(SWIPL_PKG_DEPS_ssl clib http sgml zlib)
 set(SWIPL_PKG_DEPS_tipc clib paxos)
-if(EMSCRIPTEN)
+if(EMSCRIPTEN OR WASI)
 set(SWIPL_PKG_DEPS_http clib sgml json)
 else()
 set(SWIPL_PKG_DEPS_http clib sgml json ssl)

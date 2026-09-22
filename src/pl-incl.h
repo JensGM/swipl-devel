@@ -263,7 +263,9 @@ handy for it someone wants to add a data type to the system.
 #ifndef O_RATIONAL_SYNTAX
 #define O_RATIONAL_SYNTAX	RAT_COMPAT
 #endif
+#ifndef O_THROW
 #define O_THROW			1
+#endif
 
 /* Define either or none of O_DYNAMIC_EXTENSIONS and O_STATIC_EXTENSIONS */
 #if (defined(HAVE_DLOPEN) || defined(HAVE_SHL_LOAD) || defined(EMULATE_DLOPEN)) \
@@ -1845,6 +1847,7 @@ PL_throw() instead of the nicely   synchronous PL_raise_exception() is a
 stack overflow.
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
+#if O_THROW
 #define EXCEPTION_GUARDED(code, cleanup) \
 	{ exception_frame __throw_env; \
 	  __throw_env.parent = LD->exception.throw_environment; \
@@ -1860,6 +1863,13 @@ stack overflow.
 	    LD->exception.throw_environment = __throw_env.parent; \
 	  } \
 	}
+#else /*O_THROW*/
+/* Without O_THROW, PL_throw() cannot longjmp(), so there is nothing
+   to guard against; simply run the code. */
+#define EXCEPTION_GUARDED(code, cleanup) \
+	{ code; \
+	}
+#endif /*O_THROW*/
 
 #define THROW_MAGIC 42424242
 

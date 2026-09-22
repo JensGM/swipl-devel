@@ -1106,7 +1106,8 @@ CStackSize(DECL_LD)
 		*          ADDR2LINE           *
 		*******************************/
 
-#if !defined(__WINDOWS__) && !defined(__EMSCRIPTEN__)
+#if !defined(__WINDOWS__) && !defined(__EMSCRIPTEN__) && !defined(__wasi__) && \
+    defined(HAVE_DLFCN_H)
 #include <stdio.h>
 #include <dlfcn.h>
 #define HAVE_ADDR2LINE2 1

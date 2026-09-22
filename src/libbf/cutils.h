@@ -27,9 +27,11 @@
 #include <inttypes.h>
 #include <stdbool.h>
 
-#if (defined(__GNUC__) && __GNUC__ >= 13) || \
-    (defined(__clang__) && __clang_major__ >= 17)
+#if (defined(__GNUC__) && !defined(__clang__) && __GNUC__ >= 13) || \
+    (defined(__clang__) && __clang_major__ >= 19)
 #define ASSUME(expr) __attribute__((assume(expr)))
+#elif defined(__clang__)
+#define ASSUME(expr) __builtin_assume(expr)
 #elif defined(_MSC_VER)
 #define ASSUME(expr) __assume(expr)
 #else
